@@ -26,5 +26,5 @@ public class Cliente implements Serializable{
     private long id;
 
     @Column
-    String  nome, telefone, cpf, cidade, bairro, rua, numero, complemento;
+    String  nome, telefone, cpf, cidade, bairro, rua, numero, complemento, email, observacao;
 }
