@@ -28,4 +28,6 @@ public class Servico implements Serializable{
     private String nome;
     @Column
     private BigDecimal valor_base;
+    @Column
+    private String descricao;
 }
