@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api")
 @Api(value="API REST de Servicos")
-// @CrossOrigin(value = "*")
+@CrossOrigin(value = "*")
 public class ServicoResource {
     @Autowired
     ServicoRepository servicoRepository;
