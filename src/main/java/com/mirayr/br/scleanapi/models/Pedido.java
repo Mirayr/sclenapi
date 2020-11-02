@@ -47,11 +47,11 @@ public class Pedido implements Serializable{
         }
     }
 
-    public void set_dataPedido(String date){
+    public void setDataPedido(String date){
         this.dataPedido = parseDate(date);
     }
 
-    public Date get_dataPedido(){
+    public Date getDataPedido(){
         return this.dataPedido;
     }
 
