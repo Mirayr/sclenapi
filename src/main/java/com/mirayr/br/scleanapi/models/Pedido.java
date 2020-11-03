@@ -8,11 +8,15 @@ import java.text.SimpleDateFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TemporalType;
+
+import org.hibernate.boot.jaxb.hbm.spi.PluralAttributeInfoPrimitiveArrayAdapter;
 
 // import org.springframework.data.jpa.repository.Temporal;
 
@@ -34,9 +38,9 @@ public class Pedido implements Serializable{
     @Column(name = "data_pedido")
     @javax.persistence.Temporal(TemporalType.DATE)
     private Date dataPedido;    
-    
-    
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Cliente cliente;
     
     private java.util.Date parseDate(String date) {
         final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -45,6 +49,10 @@ public class Pedido implements Serializable{
         } catch (ParseException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    public long getId(){
+        return this.id;
     }
 
     public void setDataPedido(String date){
@@ -59,4 +67,22 @@ public class Pedido implements Serializable{
         this.dataPedido = parseDate(data);
     }
 
+    public void setCliente(Cliente cliente){
+        this.cliente = cliente;
+    }
+
+    public Cliente getCliente(){
+        return this.cliente;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pedido )) return false;
+        return (id != 0l)  && id == (((Pedido) o).getId());
+    }
+ 
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 }
