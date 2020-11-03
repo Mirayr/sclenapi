@@ -1,8 +1,8 @@
 package com.mirayr.br.scleanapi.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,10 +33,15 @@ public class Cliente implements Serializable{
     @Column
     String  nome, telefone, cpf, cidade, bairro, rua, numero, complemento, email, observacao;
 
-    @OneToMany(
+    @OneToMany(        
         cascade = CascadeType.ALL,
-        orphanRemoval = false
+        orphanRemoval = true
     )
-    @JoinColumn(name = "cliente_id")
-    private List<Pedido> pedidos = new ArrayList <>();
+    @JoinColumn(name = "cliente_id", referencedColumnName = "id")
+    private Set<Pedido> pedidos = new HashSet<Pedido>();
+
+    public void setPedido(Pedido pedido){
+        pedidos.add(pedido);
+        pedido.setCliente(this);                       
+    }
 }
