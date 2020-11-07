@@ -2,16 +2,19 @@ package com.mirayr.br.scleanapi.models;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TemporalType;
@@ -42,6 +45,15 @@ public class Pedido implements Serializable{
     @ManyToOne(fetch = FetchType.LAZY)
     private Cliente cliente;
     
+
+    @ManyToMany(     mappedBy = "pedidos",//Nome do Set criado na tabela Servico
+                     fetch = FetchType.LAZY,
+                     cascade = {
+                         CascadeType.PERSIST,
+                         CascadeType.MERGE
+                })
+    private Set<Servico> servicos = new HashSet<Servico>();
+
     private java.util.Date parseDate(String date) {
         final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -49,6 +61,24 @@ public class Pedido implements Serializable{
         } catch (ParseException e) {
             throw new IllegalArgumentException(e);
         }
+    }
+
+    public void setServico(Servico  servico){
+        this.servicos.add(servico);
+        servico.setPedido(this);
+    }
+
+    public void removeServico(Servico servico){
+        this.servicos.remove(servico);
+        servico.getPedidos().remove(this);
+    }
+
+    public void setServicos(Set<Servico> servicos){
+        this.servicos = servicos;
+    }
+
+    public Set<Servico> getServicos(){
+        return this.servicos;
     }
 
     public long getId(){
