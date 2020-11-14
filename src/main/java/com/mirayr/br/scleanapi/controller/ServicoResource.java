@@ -2,6 +2,8 @@ package com.mirayr.br.scleanapi.controller;
 
 import java.util.List;
 
+import javax.ws.rs.core.MediaType;
+
 import com.mirayr.br.scleanapi.models.Servico;
 import com.mirayr.br.scleanapi.repository.ServicoRepository;
 
@@ -31,31 +33,31 @@ public class ServicoResource {
     @Autowired
     ServicoRepository servicoRepository;
 
-    @GetMapping("/servicos")
+    @GetMapping(value = "/servicos", produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value="Retorna uma lista de Serviços")
     public List<Servico> listaServicos(){
         return servicoRepository.findAll();
     }
 
-    @GetMapping("/servico/{id}")
+    @GetMapping(value = "/servico/{id}", produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value="Retorna um unico Serviço")
     public Servico listaServicoUnico(@PathVariable(value="id") long id) {
         return servicoRepository.findById(id);
     }
 
-    @PostMapping("/servico")
+    @PostMapping(value = "/servico", consumes = MediaType.APPLICATION_JSON)
     @ApiOperation(value="Salva um Serviço novo")
     public Servico salvaServico(@RequestBody Servico servico) {
         return servicoRepository.save(servico);
     }
     
-    @DeleteMapping("/servico")
+    @DeleteMapping(value = "/servico", consumes = MediaType.APPLICATION_JSON)
     @ApiOperation(value="Apaga um Serviço Existente")
     public void deletaServico(@RequestBody Servico servico) {
         servicoRepository.delete(servico);
     }
 
-    @PutMapping("/servico")
+    @PutMapping(value = "/servico", consumes = MediaType.APPLICATION_JSON)
     @ApiOperation(value="Atualiza um Serviço existente")
     public Servico atualizaServico(@RequestBody Servico servico) {
         return servicoRepository.save(servico);
