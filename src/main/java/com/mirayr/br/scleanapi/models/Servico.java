@@ -16,52 +16,64 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.criteria.Fetch;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+
 
 @Entity
 @Table(name = "servico")
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Servico implements Serializable{
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    public long id;
     @Column
-    private String nome;
+    public String nome;
     @Column
-    private BigDecimal valor_base;
+    public BigDecimal valor_base;
     @Column
-    private String descricao;
+    public String descricao;
 
-    @ManyToMany(    fetch = FetchType.LAZY
-                    //,cascade = CascadeType.ALL
+    @ManyToMany(    fetch = FetchType.LAZY,
+                    cascade = CascadeType.REMOVE
     )
     @JoinTable(
         name = "pedido_servico",
         joinColumns = {@JoinColumn(name = "servico_id")},
         inverseJoinColumns = {@JoinColumn(name = "pedido_id")}
     )
-    private Set<Pedido> pedidos = new HashSet<Pedido>();
+    @JsonBackReference("servicos")
+    public Set<Pedido> pedidos_in_services = new HashSet<Pedido>();
 
     public void setPedido(Pedido pedido){
-        this.pedidos.add(pedido);
+        this.pedidos_in_services.add(pedido);
     }
 
     public void removePedido(Pedido pedido){
-        this.pedidos.remove(pedido);
+        this.pedidos_in_services.remove(pedido);
     }
 
-    public void setPedidos(Set<Pedido> pedidos){
-        this.pedidos = pedidos;
+    public void setpedidos(Set<Pedido> pedidos){
+        this.pedidos_in_services = pedidos;
     }
 
-    public Set<Pedido> getPedidos(){
-        return this.pedidos;
+    public Set<Pedido> getpedidos(){
+        return this.pedidos_in_services;
     }
+
+    public Servico(){}
+
+    public Servico(long id, String nome, BigDecimal valor_base, String descricao, Set<Pedido> pedidos_in_services) 
+    {
+        this.id = id;
+        this.nome = nome;
+        this.valor_base = valor_base;
+        this.descricao = descricao;
+        this.pedidos_in_services = pedidos_in_services;
+    }
+    
 }
