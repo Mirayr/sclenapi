@@ -19,39 +19,36 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TemporalType;
 
-import org.hibernate.boot.jaxb.hbm.spi.PluralAttributeInfoPrimitiveArrayAdapter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-// import org.springframework.data.jpa.repository.Temporal;
-
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Pedido")
-@NoArgsConstructor
-@AllArgsConstructor
-public class Pedido implements Serializable{
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIgnoreProperties(value = { "cliente" }, allowSetters = true)
+public class Pedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @Column(name = "data_pedido")
     @javax.persistence.Temporal(TemporalType.DATE)
-    private Date dataPedido;    
+    private Date dataPedido;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonProperty("cliente")        
     private Cliente cliente;
-    
 
-    @ManyToMany(     mappedBy = "pedidos",//Nome do Set criado na tabela Servico
-                     fetch = FetchType.LAZY,
-                     cascade = {
-                         CascadeType.PERSIST,
-                         CascadeType.MERGE
-                })
+    @ManyToMany(mappedBy = "pedidos_in_services", // Nome do Set criado na tabela Servico
+            fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
+    @JsonBackReference("pedidos_in_services")
     private Set<Servico> servicos = new HashSet<Servico>();
 
     private java.util.Date parseDate(String date) {
@@ -63,56 +60,71 @@ public class Pedido implements Serializable{
         }
     }
 
-    public void setServico(Servico  servico){
+    public void setServico(Servico servico) {
         this.servicos.add(servico);
         servico.setPedido(this);
     }
 
-    public void removeServico(Servico servico){
+    public void removeServico(Servico servico) {
         this.servicos.remove(servico);
-        servico.getPedidos().remove(this);
+        servico.getpedidos().remove(this);
     }
 
-    public void setServicos(Set<Servico> servicos){
+    public void setServicos(Set<Servico> servicos) {
         this.servicos = servicos;
     }
 
-    public Set<Servico> getServicos(){
+    public Set<Servico> getServicos() {
         return this.servicos;
     }
 
-    public long getId(){
+    public long getId() {
         return this.id;
     }
 
-    public void setDataPedido(String date){
+    public void setDataPedido(String date) {
         this.dataPedido = parseDate(date);
     }
 
-    public Date getDataPedido(){
+    public Date getDataPedido() {
         return this.dataPedido;
     }
 
-    public Pedido(String data){
-        this.dataPedido = parseDate(data);
-    }
+    // Pedido(String data) {
+    //     this.dataPedido = parseDate(data);
+    // }
 
-    public void setCliente(Cliente cliente){
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 
-    public Cliente getCliente(){
+    @JsonBackReference("pedidos")
+    public Cliente getCliente() {
         return this.cliente;
     }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Pedido )) return false;
-        return (id != 0l)  && id == (((Pedido) o).getId());
+        if (this == o)
+            return true;
+        if (!(o instanceof Pedido))
+            return false;
+        return (id != 0l) && id == (((Pedido) o).getId());
     }
- 
+
     @Override
     public int hashCode() {
         return 31;
     }
+
+    public Pedido(){}
+
+    public Pedido(long id, Date dataPedido, Cliente cliente, Set<Servico> servicos) 
+    {
+        this.id = id;
+        this.dataPedido = dataPedido;
+        this.cliente = cliente;
+        this.servicos = servicos;
+    }
+    
 }
