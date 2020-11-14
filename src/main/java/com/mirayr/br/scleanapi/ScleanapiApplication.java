@@ -1,27 +1,33 @@
 package com.mirayr.br.scleanapi;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+// import java.util.HashSet;
+// import java.util.List;
+// import java.util.Set;
 
-import com.mirayr.br.scleanapi.models.Cliente;
-import com.mirayr.br.scleanapi.models.Pedido;
-import com.mirayr.br.scleanapi.models.Servico;
-import com.mirayr.br.scleanapi.repository.ClienteRepository;
-import com.mirayr.br.scleanapi.repository.PedidoRepository;
-import com.mirayr.br.scleanapi.repository.ServicoRepository;
+// import com.mirayr.br.scleanapi.models.Cliente;
+// import com.mirayr.br.scleanapi.models.Pedido;
+// import com.mirayr.br.scleanapi.models.Servico;
+// import com.mirayr.br.scleanapi.repository.ClienteRepository;
+// import com.mirayr.br.scleanapi.repository.PedidoRepository;
+// import com.mirayr.br.scleanapi.repository.ServicoRepository;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.boot.web.servlet.ServletComponentScan;
+// import org.springframework.context.ConfigurableApplicationContext;
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.web.servlet.config.annotation.CorsRegistry;
+// import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 
 // import net.bytebuddy.dynamic.loading.ClassLoadingStrategy.Configurable;
-
+@ServletComponentScan
 @SpringBootApplication
 public class ScleanapiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ScleanapiApplication.class, args);
+
 		// ConfigurableApplicationContext configurableApplicationContext = 
 		// SpringApplication.run(ScleanapiApplication.class, args);
 
@@ -30,6 +36,8 @@ public class ScleanapiApplication {
 		// ServicoRepository servicoRepository = configurableApplicationContext.getBean(ServicoRepository.class);
 
 		// Cliente cliente_30 = clienteRepository.findById(30);
+		// System.out.println("Complemento: "+cliente_30.getComplemento());
+		// System.out.println(cliente_30.toString());
 
 		// // Criando pedidos e salvando para um cliente
 		// Pedido pedido1 = new Pedido("1999-02-02");
@@ -66,6 +74,7 @@ public class ScleanapiApplication {
 		// // Mostra todos os clientes que tem pedidos e seus serviços
 		// List<Cliente> all_clientes = clienteRepository.findAll();
 		// for (Cliente cliente : all_clientes) {
+		// 	// System.out.println(cliente.toString());
 		// 	for (Pedido pedido : cliente.getPedidos()){
 		// 		System.out.println(" Nome Cliente no pedido pedido: " + pedido.getCliente().getNome() +  "  Data do Pedido: " + pedido.getDataPedido()+" Id do pedido "+ pedido.getId());
 		// 		for(Servico servico : pedido.getServicos()){
@@ -78,4 +87,15 @@ public class ScleanapiApplication {
 		
 	}
 
+	// @Bean
+	// public WebMvcConfigurer corsConfigurer() {
+	// 	return new WebMvcConfigurer() {
+	// 		@Override
+	// 		public void addCorsMappings(CorsRegistry registry) {
+	// 			registry.addMapping("/**")
+	// 			.allowedOrigins("http://localhost:8080")
+	// 			.allowedMethods("PUT");
+	// 		}
+	// 	};
+	// }
 }
