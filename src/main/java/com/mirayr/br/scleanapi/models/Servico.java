@@ -19,6 +19,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name = "servico")
 @JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+@JsonIgnoreProperties(value = { "pedidos_in_services" }, allowSetters = true)
 public class Servico implements Serializable{
     public static final long serialVersionUID = 1L;
     @Id
@@ -46,9 +49,11 @@ public class Servico implements Serializable{
         joinColumns = {@JoinColumn(name = "servico_id")},
         inverseJoinColumns = {@JoinColumn(name = "pedido_id")}
     )
+    
     @JsonBackReference("servicos")
     public Set<Pedido> pedidos_in_services = new HashSet<Pedido>();
 
+    
     public void setPedido(Pedido pedido){
         this.pedidos_in_services.add(pedido);
     }
@@ -56,11 +61,13 @@ public class Servico implements Serializable{
     public void removePedido(Pedido pedido){
         this.pedidos_in_services.remove(pedido);
     }
-
+    
+    
     public void setpedidos(Set<Pedido> pedidos){
         this.pedidos_in_services = pedidos;
     }
-
+    
+    @JsonProperty("pedidos_in_services")
     public Set<Pedido> getpedidos(){
         return this.pedidos_in_services;
     }
